@@ -1,0 +1,31 @@
+<h1 style="color:red" class="text-center">VISTA DE PRODUCTOS</h1>
+    <div class="container bg-secondary">  
+        <div class="row">
+            <div class="col">
+                <h2>Nombre</h2>
+            </div>
+            <div class="col">
+                <h2>Precio</h2>
+            </div>
+            <div class="col">
+                <h2>Miniatura</h2>
+            </div>
+        </div> 
+    </div>
+    <div class="container bg-secondary">  
+       {{#if exist}}
+            {{#each datos}}
+            <div class="row">
+                <div class="col">
+                    <h5>{{this.title}}</h5>
+                </div>
+                <div class="col">
+                    <h5>{{this.price}}</h5>
+                </div>
+                <div class="col-" style="width: 5rem">
+                    <img src="{{this.thumbnail}}" alt="" class="card-img-top">
+                </div>
+            </div> 
+            {{/each}}
+        {{/if}}
+    </div>

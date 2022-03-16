@@ -6,14 +6,10 @@ const {Server: IOServer} = require('socket.io');
 
 
 //DATABASES
-const { options } = require('./src/utils/options')
-const { optionsSlqLite3 } = require('./src/utils/optionsSqlite3')
-
+const   { mysql, optionsSlqLite3 }  = require('./src/utils/options')
 const Contenedor = require('./Contenedor.js')
-const objContenedor = new Contenedor(options);
-
-const Contenedorsqlite3 = require('./ContenedorSqlite3')
-const objContenedorqlite3 = new Contenedorsqlite3(optionsSlqLite3)
+const objContenedor = new Contenedor(mysql,'productos');
+const objContenedorqlite3 = new Contenedor(optionsSlqLite3,'mensajes')
 
 
 /* ---------------------- Instancia de express ----------------------*/
@@ -56,7 +52,7 @@ io.on('connection',  async socket => {
    
 
     socket.on('new-message', async data => {
-        const newMessage = await  objContenedorqlite3.save(data)
+        await  objContenedorqlite3.save(data)
         const mensajes = objContenedorqlite3.getAll();
         mensajes.then ( res => {
             mensajesDatabase = res

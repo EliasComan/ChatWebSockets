@@ -2,15 +2,16 @@ const fs =  require('fs');
 const knexLib = require('knex')
 
 class Contenedor {
-    constructor(options){
+    constructor(options,tabla){
         this.knex = knexLib(options)
+        this.tabla = tabla
     }
 
-    createTable ( ) {
+    createTablemariaDB ( ) {
 
-        return this.knex.schema.dropTableIfExists('productoss')
+        return this.knex.schema.dropTableIfExists(this.tabla)
         .finally ( 
-            () => {  this.knex.schema.createTable('productos', table => { 
+            () => {  this.knex.schema.createTable(this.tabla, table => { 
             table.increments('id');
             table.string('title', 25).notNullable();
             table.integer('price').notNullable();
@@ -18,24 +19,32 @@ class Contenedor {
             })
         })
     }
+    createTableSqlite3 (){
+        return  this.knex.schema.createTable(this.tabla, table => { 
+            table.increments('id');
+            table.string('email', 25).notNullable();
+            table.string('mensaje',200).notNullable();
+            table.string('timestamp',50).notNullable();
+            })
+    }
 
     save (object) { 
-       return  this.knex('productos').insert(object)
+       return  this.knex(this.tabla).insert(object)
     }
     getByid ( id){ 
-        return this.knex.from('productos').select('*').where('id', '=', id)
+        return this.knex.from(this.tabla).select('*').where('id', '=', id)
      
      }
     getAll () {
-       return  this.knex.from('productos').select('*')
+       return  this.knex.from(this.tabla).select('*')
          
         }     
     deleteById(id){
-        return this.knex.from('productos').where('id', '=', id).del()
+        return this.knex.from(this.tabla).where('id', '=', id).del()
          
      }
     replaceById(newData){
-      return this.knex.from('productos').where('id', newData.id).update({title:newData.title, price:newData.price, thumbnail:newData.thumbnail })
+      return this.knex.from(this.tabla).where('id', newData.id).update({title:newData.title, price:newData.price, thumbnail:newData.thumbnail })
       
      }
     deleteAll () {

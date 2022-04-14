@@ -2,14 +2,21 @@ const handlebars = require('express-handlebars')
 const express = require('express')
 const bodyParser = require('body-parser')
 const {Server: HttpServer} = require('http');
-const {Server: IOServer} = require('socket.io');
+const { Server: IOServer} = require('socket.io');
+const { faker } = require('@faker-js/faker')
 
-
-//DATABASES
+/* ---------------------- DATABASES ----------------------*/
+//SQL
 const   { mysql, optionsSlqLite3 }  = require('./src/utils/options')
-const Contenedor = require('./Contenedor.js')
+const Contenedor = require('./contenedores/Contenedor.js')
 const objContenedor = new Contenedor(mysql,'productos');
-const objContenedorqlite3 = new Contenedor(optionsSlqLite3,'mensajes')
+//const objContenedorqlite3 = new Contenedor(optionsSlqLite3,'mensajes')
+//MONGODB 
+const mensajesdao = require('./daos/mensajes.dao.atlas')
+const mensajes = new mensajesdao()
+
+
+
 
 
 /* ---------------------- Instancia de express ----------------------*/
@@ -27,11 +34,6 @@ app.set('views', './views')
 
 //WEBSOCKETS
 
-const mensajePrueba = [{
-    email: 'comanelias5@gmail.com',
-    mensaje: 'Este es un mensaje',
-    timestamp: new Date().toLocaleString()
-}]
 let mensajesDatabase = []
 
 io.on('connection',  async socket => {
@@ -40,21 +42,18 @@ io.on('connection',  async socket => {
     io.sockets.emit('tabla', JSON.parse(JSON.stringify(results)));
         })
         .catch(err => console.log(err))
-    
 
-    console.log('Un cliente se ha conectado '+ socket.id);
-
-        const mensajes =objContenedorqlite3.getAll();
-        mensajes.then ( res => {
+        const getMensajes =mensajes.getAll();
+        getMensajes.then ( res => {
             mensajesDatabase = res
            })
     socket.emit('mensajes', mensajesDatabase);
    
 
     socket.on('new-message', async data => {
-        await  objContenedorqlite3.save(data)
-        const mensajes = objContenedorqlite3.getAll();
-        mensajes.then ( res => {
+        await  mensajes.save(data)
+        const getMensajes = mensajes.getAll();
+        getMensajes.then ( res => {
             mensajesDatabase = res
             io.sockets.emit('mensajes', mensajesDatabase) 
            })
@@ -103,13 +102,32 @@ app.engine('hbs', handlebars.engine({
     partialsDir: __dirname + '/views/partials'
 })
 )
-                    
+        
+
 //ROUTES
 app.get('/' ,(req,res) => {
     res.render('./partials/formulario')
     
 })
 
+function generarRandomObjeto() {
+    return {
+        title: faker.commerce.product(),
+        price: faker.commerce.price(50, 5200, 0, '$'),
+        thumbnail: faker.image.business(1234, 2345, true)
+    }
+}
+app.get('/api/productos-test', (req, res) => {
+   const productosgenerados = []
+    for (let index = 0; index < 5; index++) {
+        const element = generarRandomObjeto();
+        productosgenerados.push(element)
+        
+    }
+    res.render('./partials/productos',{exist:true, datos:productosgenerados})
+
+
+})
 
 app.post('/productos', (req, res) => {
     const data = {

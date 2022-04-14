@@ -16,9 +16,15 @@
     "express": "^4.17.2",
     "express-handlebars": "^6.0.2",
     "knex": "^1.0.3",
+    "mongoose": "^6.3.0",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.15",
     "socket.io": "^4.4.1"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^6.1.2",
+    "install": "^0.13.0",
+    "npm": "^8.6.0"
   }
 }

@@ -56,7 +56,7 @@
         return(`<div style="display:flex">
             <strong style='color:blue'>${elem.email}</strong>
             <p style='color:brown'>${new Date().toLocaleString()}</p>:
-            <em style='color:green'>${elem.mensaje}</em> 
+            <em style='color:green'>${elem.message}</em> 
             </div>`)
     }).join(" ");
     document.getElementById('messages').innerHTML = html;
@@ -66,8 +66,8 @@
     function addMessage(e) {
     const mensaje = {
         email: document.getElementById('email').value,
-        mensaje: document.getElementById('mensaje').value,
-        timestamp: new Date().toLocaleString()
+        timestamp:` ${new Date().toLocaleString()}`,
+        message: document.getElementById('mensaje').value
     };
     socket.emit('new-message', mensaje);
     return false;

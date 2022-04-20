@@ -4,6 +4,10 @@ const bodyParser = require('body-parser')
 const {Server: HttpServer} = require('http');
 const { Server: IOServer} = require('socket.io');
 const { faker } = require('@faker-js/faker')
+const connectMongo = require('connect-mongo')
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
 
 /* ---------------------- DATABASES ----------------------*/
 //SQL
@@ -12,11 +16,12 @@ const Contenedor = require('./contenedores/Contenedor.js')
 const objContenedor = new Contenedor(mysql,'productos');
 //const objContenedorqlite3 = new Contenedor(optionsSlqLite3,'mensajes')
 //MONGODB 
-const mensajesdao = require('./daos/mensajes.dao.atlas')
+const mensajesdao = require('./daos/mensajes.dao.atlas');
 const mensajes = new mensajesdao()
-
-
-
+const MongoStore = connectMongo.create({
+   mongoUrl: 'mongodb+srv://coderhouse:coderhouse@cluster0.wikgb.mongodb.net/sessions?retryWrites=true&w=majority',
+   ttl:100
+})
 
 
 /* ---------------------- Instancia de express ----------------------*/
@@ -24,13 +29,20 @@ const app = express();
 const httpServer = new HttpServer(app);
 const io = new IOServer(httpServer);
 
-
-
-//MIDDLEWEARS
+/* ---------------------- MIDDLEWEARS ----------------------*/
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended : true}))
 app.set('view engine', 'hbs')
 app.set('views', './views')
+//COOKIES
+app.use(cookieParser());
+app.use(session({
+    store: MongoStore,
+    secret: '123456789!@#$%^&*()',
+    resave: false,
+    saveUninitialized: false
+}));
+    
 
 //WEBSOCKETS
 
@@ -44,6 +56,7 @@ io.on('connection',  async socket => {
         .catch(err => console.log(err))
 
         const getMensajes =mensajes.getAll();
+        
         getMensajes.then ( res => {
             mensajesDatabase = res
            })
@@ -103,11 +116,25 @@ app.engine('hbs', handlebars.engine({
 })
 )
         
+app.get('/session', (req,res) => {
+    if (req.session.contador) {
+        req.session.contador++;
+        res.send(`Ud ha visitado el sitio ${req.session.contador} veces`)
+    } else {
+        req.session.contador = 1;
+        res.send('Bienvenido!');
+    }
+})
 
 //ROUTES
 app.get('/' ,(req,res) => {
-    res.render('./partials/formulario')
-    
+    if (req.session.contador) {
+        req.session.contador++
+    }
+    else{
+        req.session.contador = 1
+    }
+    res.render('./partials/formulario',{session:req.session.contador})
 })
 
 function generarRandomObjeto() {
@@ -148,7 +175,7 @@ app.post('/productos', (req, res) => {
 
 
 
-const PORT = 8081;
+const PORT = 8181;
 const server = httpServer.listen(PORT, () => {
     console.log('Escuchando en el puerto ' + PORT);
 })

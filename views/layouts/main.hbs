@@ -10,9 +10,33 @@
     <title>Handlebars</title>
 </head>
 <body>
+
+   
    {{{body}}}
    <hr>
- <h1>TU session id es : {{session}}</h1>
+ <h1 style="color:red">ENVIAR PRODUCTOS</h1>
+<form action="/productos"  method="post" >
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Nombre</label>
+    <input type="text" class="form-control" name="title">
+    <label for="exampleInputEmail1" class="form-label">Precio</label>
+    <input type="number" class="form-control" name="price">
+     <label for="exampleInputEmail1" class="form-label">Url Miniatura</label>
+    <input type="text" class="form-control" name="thumbnail">
+  <button type="submit" class="btn btn-success">Enviar</button>
+   <button type="button" class="btn btn-secondary"><a href="/productos" style='text-decoration: none; color:black'>Ir a productos</a></button>
+</form>
+
+
+    <form action="/login" method="post">
+    <div class="mb-3">
+        <label for="exampleInputEmail1"  class="form-label">Ingresa tu nombre</label>
+        <input type="text" class="form-control" name='name' id="exampleInputEmail1" aria-describedby="emailHelp" required>
+    </div>
+    <button class="btn btn-primary">Submit</button>
+    </form>
+
+
    <h1 style="color:red" class="text-center">VISTA DE PRODUCTOS</h1>
     <div class="container bg-secondary">  
         <div class="row">
@@ -48,6 +72,7 @@
    <div id="messages">
 
    </div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     const socket = io.connect();
 
@@ -114,6 +139,18 @@
         socket.emit('filterById',   document.getElementById('selectId').value)
     }
 
+    function Logout () {
+      fetch('/logout',{
+            method:'POST'
+      }).then( () => {
+
+          const html = document.getElementById('bienvenida')
+          html.innerHTML = 'Hasta Luego'
+          const button = document.querySelector('#button')
+          button.style.display = 'none'
+      })
+    }
+   
 </script>
 </body>
 </html>

@@ -2,7 +2,7 @@ const handlebars = require('express-handlebars')
 const express = require('express')
 const bodyParser = require('body-parser')
 const {Server: HttpServer} = require('http');
-const { Server: IOServer} = require('socket.io');
+const { Server: IOServer, Socket} = require('socket.io');
 const { faker } = require('@faker-js/faker')
 const connectMongo = require('connect-mongo')
 const cookieParser = require('cookie-parser');
@@ -20,7 +20,7 @@ const mensajesdao = require('./daos/mensajes.dao.atlas');
 const mensajes = new mensajesdao()
 const MongoStore = connectMongo.create({
    mongoUrl: 'mongodb+srv://coderhouse:coderhouse@cluster0.wikgb.mongodb.net/sessions?retryWrites=true&w=majority',
-   ttl:100
+   ttl:15
 })
 
 
@@ -116,25 +116,24 @@ app.engine('hbs', handlebars.engine({
 })
 )
         
-app.get('/session', (req,res) => {
-    if (req.session.contador) {
-        req.session.contador++;
-        res.send(`Ud ha visitado el sitio ${req.session.contador} veces`)
-    } else {
-        req.session.contador = 1;
-        res.send('Bienvenido!');
-    }
-})
+
 
 //ROUTES
 app.get('/' ,(req,res) => {
-    if (req.session.contador) {
-        req.session.contador++
-    }
-    else{
-        req.session.contador = 1
-    }
-    res.render('./partials/formulario',{session:req.session.contador})
+    res.render('./layouts/main',{session:req.session.contador})
+})
+
+
+app.post('/login', (req, res) => {
+    const nombre = req.body.name;
+    req.session.nombre = nombre
+    res.render('./partials/Bienvenida',{nombre:nombre})
+})
+
+app.post('/logout' ,async (req, res) => {
+    req.session.destroy( () => {
+    })
+    res.send('Hasta luego')
 })
 
 function generarRandomObjeto() {
@@ -152,8 +151,6 @@ app.get('/api/productos-test', (req, res) => {
         
     }
     res.render('./partials/productos',{exist:true, datos:productosgenerados})
-
-
 })
 
 app.post('/productos', (req, res) => {

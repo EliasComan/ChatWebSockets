@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { config } = require('../src/utils/config')
+const { config } = require('../utils/config')
 
 
  mongoose.connect(config.atlas.url, {

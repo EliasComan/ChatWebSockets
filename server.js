@@ -11,7 +11,6 @@ const path = require('path');
 const passport = require('passport');
 const strategy =  require('passport-facebook').Strategy;
 const dotenv = require('dotenv')
-const minimist = require('minimist')
 dotenv.config()
 
 
@@ -143,7 +142,7 @@ passport.deserializeUser((obj, cb) => {
     cb(null, obj);
 });
 //ROUTES
-app.get('/' ,(req,res) => {
+app.get('/data' ,(req,res) => {
     if (req.session.nombre) {
         const nombre = req.session.name;
         console.log(nombre)
@@ -229,11 +228,9 @@ app.get('/datos', (req, res)=>{
      console.log('USuario no autentciado')
     }
  });
- const data = minimist(process.argv.slice(2)[1])
- const dataReform=data._.join('')
- console.log(dataReform)
-const server = httpServer.listen( dataReform || 8080, () => {
+const server = httpServer.listen( process.argv[2] || 8080, () => {
     console.log('Server up')
+    console.log(process.argv[2])
 })
 
 server.on('err', (error) => {

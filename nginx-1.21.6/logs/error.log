@@ -1,0 +1,10 @@
+2022/05/05 13:14:31 [notice] 6784#11656: signal process started
+2022/05/05 13:14:52 [error] 14432#13852: *1 "C:\Users\ganda\OneDrive\Escritorio\Elias\aplicacionChat\nginx-1.21.6/../nodeServer/public/index.html" is not found (3: The system cannot find the path specified), client: 127.0.0.1, server: nginx_node, request: "GET / HTTP/1.1", host: "localhost"
+2022/05/05 13:16:35 [notice] 8380#7472: signal process started
+2022/05/05 13:17:14 [error] 14808#10244: *4 CreateFile() "./html/dat" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: nginx_node, request: "GET /dat HTTP/1.1", host: "localhost"
+2022/05/05 13:17:16 [error] 14808#10244: *4 CreateFile() "./html/data" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: nginx_node, request: "GET /data HTTP/1.1", host: "localhost"
+2022/05/05 13:17:18 [error] 14808#10244: *4 CreateFile() "./html/data" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: nginx_node, request: "GET /data HTTP/1.1", host: "localhost"
+2022/05/05 13:17:57 [notice] 9808#5880: signal process started
+2022/05/05 13:35:47 [error] 6544#11784: *1 CreateFile() "./html/views/css/estilos.css" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: nginx_node, request: "GET /views/css/estilos.css HTTP/1.1", host: "localhost", referrer: "http://localhost/data/"
+2022/05/05 13:35:47 [error] 6544#11784: *1 CreateFile() "./html/socket.io/socket.io.js" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: nginx_node, request: "GET /socket.io/socket.io.js HTTP/1.1", host: "localhost", referrer: "http://localhost/data/"
+2022/05/05 13:37:44 [notice] 15848#1628: signal process started

@@ -11,10 +11,11 @@ const path = require('path');
 const passport = require('passport');
 const strategy =  require('passport-facebook').Strategy;
 const dotenv = require('dotenv')
-dotenv.config()
+const cpus = require('os')
 
 
 /* ---------------------- DATABASES ----------------------*/
+dotenv.config()
 //SQL
 const   { mysql, optionsSlqLite3 }  = require('./src/utils/options')
 const Contenedor = require('./src/contenedores/Contenedor')
@@ -23,8 +24,8 @@ const objContenedor = new Contenedor(mysql,'productos');
 const mensajesdao = require('./src/daos/mensajes.dao.atlas');
 const mensajes = new mensajesdao()
 const MongoStore = connectMongo.create({
-   mongoUrl:  `mongodb+srv://coderhouse:${process.env.PASSWORD_MONGO}@cluster0.wikgb.mongodb.net/sessions?retryWrites=true&w=majority `,
-   ttl:15
+    mongoUrl:  `mongodb+srv://coderhouse:${process.env.PASSWORD_MONGO}@cluster0.wikgb.mongodb.net/sessions?retryWrites=true&w=majority `,
+    ttl:15
 })
 
 
@@ -142,7 +143,7 @@ passport.deserializeUser((obj, cb) => {
     cb(null, obj);
 });
 //ROUTES
-app.get('/data' ,(req,res) => {
+app.get('/' ,(req,res) => {
     if (req.session.nombre) {
         const nombre = req.session.name;
         console.log(nombre)

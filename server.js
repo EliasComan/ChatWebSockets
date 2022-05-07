@@ -125,7 +125,7 @@ const FACEBOOK_SECRET_KEY =  `${process.env.FACEBOOK_SECRET_KEY}`
 passport.use(new strategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_SECRET_KEY,
-    callbackURL: "http://localhost:8181/auth/facebook/callback",
+    callbackURL: "http://localhost:8080/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'photos', 'email']
   }, 
   function(accessToken, refreshToken, profile, cb) {
@@ -171,7 +171,7 @@ app.post('/logout' , (req, res) => {
     })
     res.json({data:'Hasta Luego'})
 })
-app.get('/logout', () => {
+app.get('/logout', (req,res) => {
     res.render('./partials/logout')
 })
 

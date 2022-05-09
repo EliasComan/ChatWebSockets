@@ -127,7 +127,7 @@ const FACEBOOK_SECRET_KEY =  `${process.env.FACEBOOK_SECRET_KEY}`
 passport.use(new strategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_SECRET_KEY,
-    callbackURL: "https://heroku-prueba-coderhouse.herokuapp.com/auth/facebook/callback",
+    callbackURL: "http://localhost:8080/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'photos', 'email']
   }, 
   function(accessToken, refreshToken, profile, cb) {
@@ -233,7 +233,6 @@ app.get('/datos', (req, res)=>{
  });
 const server = httpServer.listen((process.env.PORT)|| (process.argv[2] || 3000), () => {
     console.log('Server up')
-    console.log(process.argv[2])
 })
 
 server.on('err', (error) => {

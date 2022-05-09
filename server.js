@@ -231,7 +231,7 @@ app.get('/datos', (req, res)=>{
      console.log('USuario no autentciado')
     }
  });
-const server = httpServer.listen( process.argv[2] || 8080, () => {
+const server = httpServer.listen((process.env.PORT)|| (process.argv[2] || 3000), () => {
     console.log('Server up')
     console.log(process.argv[2])
 })

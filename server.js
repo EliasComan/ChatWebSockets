@@ -127,7 +127,7 @@ const FACEBOOK_SECRET_KEY =  `${process.env.FACEBOOK_SECRET_KEY}`
 passport.use(new strategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_SECRET_KEY,
-    callbackURL: "http://localhost:8080/auth/facebook/callback",
+    callbackURL: "https://heroku-prueba-coderhouse.herokuapp.com/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'photos', 'email']
   }, 
   function(accessToken, refreshToken, profile, cb) {

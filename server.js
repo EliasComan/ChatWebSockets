@@ -10,14 +10,13 @@ const session = require('express-session');
 const path = require('path');
 const passport = require('passport');
 const strategy =  require('passport-facebook').Strategy;
-const dotenv = require('dotenv')
+const dotenv = require('dotenv').config()
 const cpus = require('os')
 
 
 
 
 /* ---------------------- DATABASES ----------------------*/
-dotenv.config()
 //SQL
 const   { mysql, optionsSlqLite3 }  = require('./src/utils/options')
 const Contenedor = require('./src/contenedores/Contenedor')
@@ -127,13 +126,10 @@ const FACEBOOK_SECRET_KEY =  `${process.env.FACEBOOK_SECRET_KEY}`
 passport.use(new strategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_SECRET_KEY,
-    callbackURL: "http://localhost:8080/auth/facebook/callback",
+    callbackURL: "/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'photos', 'email']
   }, 
   function(accessToken, refreshToken, profile, cb) {
-    console.log('accessToken: ', accessToken)
-    console.log('refreshToken: ', refreshToken)
-    console.log(profile);
     cb(null, profile);
   }
 ));
@@ -148,7 +144,6 @@ passport.deserializeUser((obj, cb) => {
 app.get('/' ,(req,res) => {
     if (req.session.nombre) {
         const nombre = req.session.name;
-        console.log(nombre)
         res.render('./partials/Bienvenida',{nombre:nombre})
     }else{
 
@@ -166,14 +161,10 @@ app.post('/login', (req, res) => {
         res.redirect('/')
     }
 })
-
-app.post('/logout' , (req, res) => {
+app.get('/logout', (req,res) => {
     req.session.destroy( (err) => {
         console.log(err)
     })
-    res.json({data:'Hasta Luego'})
-})
-app.get('/logout', (req,res) => {
     res.render('./partials/logout')
 })
 
@@ -200,10 +191,8 @@ app.post('/productos', (req, res) => {
         price: req.body.price,
         thumbnail: req.body.thumbnail,
     }
-    console.log(data)
     const guardar = objContenedor.save(data);
     guardar.then( () => {
-        console.log('done')
         res.redirect('/')
     })
     .catch ( err => {console.log(err)})
@@ -216,9 +205,9 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
 
 app.get('/datos', (req, res)=>{
     if(req.isAuthenticated()){
-     if (!req.user.contador) {
-         req.user.contador = 0
-     }
+        if (!req.user.contador) {
+            req.user.contador = 0
+        }
      req.user.contador++
      const datosUsuario = {
          nombre: req.user.displayName,
@@ -231,7 +220,9 @@ app.get('/datos', (req, res)=>{
      console.log('USuario no autentciado')
     }
  });
-const server = httpServer.listen((process.env.PORT)|| (process.argv[2] || 3000), () => {
+
+
+const server = httpServer.listen((process.env.PORT) || (process.argv[2] || 3000), () => {
     console.log('Server up')
 })
 
